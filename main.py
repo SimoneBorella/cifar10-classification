@@ -378,9 +378,7 @@ def train(model, model_number, trainloader, valloader, loss_function, optimizer,
     monitor.print_stats()
 
 
-def test(model, test_model_file, testloader, loss_function, device, monitor):
-    monitor.log(f"Testing model: {test_model_file}")
-
+def test(model, testloader, loss_function, device, monitor):
     monitor.start(desc=f"Testing", max_progress=len(testloader))
 
     test_loss = 0.0
@@ -530,9 +528,9 @@ def main(args):
         )
         model = load_model(model, f"{base_dir}/weights/{args.test_model_file}")
         loss_function = get_loss_function()
+        test_monitor.log(f"Testing model: {args.test_model_file}")
         test(
             model=model,
-            test_model_file=args.test_model_file,
             testloader=testloader,
             loss_function=loss_function,
             device=device,
