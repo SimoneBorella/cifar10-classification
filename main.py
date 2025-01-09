@@ -470,10 +470,6 @@ def main(args):
             file_name=f"{base_dir}/training_log.txt", resume=args.resume
         )
         
-        train_monitor.log(f"Model:\n{model}\n")
-        train_monitor.log(f"Loss function:\n{loss_function}\n")
-        train_monitor.log(f"Optimizer:\n{optimizer}\n")
-        train_monitor.log(f"Scheduler:\n{scheduler.__class__.__name__}")
         for attr in dir(scheduler):
             if not attr.startswith("_") and not callable(getattr(scheduler, attr)):
                 train_monitor.log(f"{attr}: {getattr(scheduler, attr)}")
@@ -505,6 +501,11 @@ def main(args):
             for _ in range(args.resume_epoch-1):
                 scheduler.step()
 
+        train_monitor.log(f"Model:\n{model}\n")
+        train_monitor.log(f"Loss function:\n{loss_function}\n")
+        train_monitor.log(f"Optimizer:\n{optimizer}\n")
+        train_monitor.log(f"Scheduler:\n{scheduler.__class__.__name__}")
+
         train(
             model=model,
             model_number=model_number,
@@ -528,7 +529,9 @@ def main(args):
         )
         model = load_model(model, f"{base_dir}/weights/{args.test_model_file}")
         loss_function = get_loss_function()
+
         test_monitor.log(f"Testing model: {args.test_model_file}")
+        
         test(
             model=model,
             testloader=testloader,
