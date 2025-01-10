@@ -469,11 +469,6 @@ def main(args):
         train_monitor = Monitor(
             file_name=f"{base_dir}/training_log.txt", resume=args.resume
         )
-        
-        for attr in dir(scheduler):
-            if not attr.startswith("_") and not callable(getattr(scheduler, attr)):
-                train_monitor.log(f"{attr}: {getattr(scheduler, attr)}")
-        train_monitor.log("\n")
 
         model_number = 0
 
@@ -505,6 +500,10 @@ def main(args):
         train_monitor.log(f"Loss function:\n{loss_function}\n")
         train_monitor.log(f"Optimizer:\n{optimizer}\n")
         train_monitor.log(f"Scheduler:\n{scheduler.__class__.__name__}")
+        for attr in dir(scheduler):
+            if not attr.startswith("_") and not callable(getattr(scheduler, attr)):
+                train_monitor.log(f"{attr}: {getattr(scheduler, attr)}")
+        train_monitor.log("\n")
 
         train(
             model=model,
